@@ -41,7 +41,7 @@ ConjuntoJugadores::ConjuntoJugadores(const ConjuntoJugadores& orig) {
    numjugadores = orig.numJugadores();
    tamreservado = orig.tamreservado;
    vectorJugadores = new Jugador[tamreservado];
-   for(int i=0; i<tamreservado; i++){
+   for(int i=0; i<numjugadores; i++){
        vectorJugadores[i] = orig.vectorJugadores[i];
    }
 }
@@ -71,12 +71,12 @@ ConjuntoJugadores::ConjuntoJugadores(int n, string * vnicks){
 string ConjuntoJugadores::mostrarRanking(){
     
     string resultado;
-    ConjuntoJugadores ranking;
-    for(int i=0; i<tamreservado; i++){
+    ConjuntoJugadores ranking(tamreservado);
+    for(int i=0; i<numjugadores; i++){
         ranking.vectorJugadores[i] = vectorJugadores[i];
     }
-    for(int i=0; i<tamreservado; i++){
-        for(int j=0; j<tamreservado-i-1; j++){
+    for(int i=0; i<numjugadores; i++){
+        for(int j=0; j<numjugadores-i-1; j++){
             if(vectorJugadores[j].proporcion() < vectorJugadores[j+1].proporcion()){
                 ranking.vectorJugadores[j] = vectorJugadores[j+1];
                 ranking.vectorJugadores[j+1] = vectorJugadores[j];
@@ -84,9 +84,9 @@ string ConjuntoJugadores::mostrarRanking(){
         }
     }
     for(int i=0; i<numjugadores; i++){
-        resultado = to_string(vectorJugadores[i].getId()) + " " + 
-                vectorJugadores[i].getNick() + " " + 
-                to_string(vectorJugadores[i].proporcion()) + "\n";
+        resultado += to_string(ranking.vectorJugadores[i].getId()) + " " + 
+                ranking.vectorJugadores[i].getNick() + " " + 
+                to_string(ranking.vectorJugadores[i].proporcion()) + "\n";
     }
     return resultado;
 }
@@ -127,29 +127,32 @@ std::ostream & operator<< (std::ostream & flujo, const ConjuntoJugadores & conju
 
 //anaide un jugador al final del vector
 ConjuntoJugadores & ConjuntoJugadores::operator+=(const Jugador& newjug) {
-    if (numjugadores >= tamreservado) {
-        resize(tamreservado + 1);  // Asegura espacio suficiente
+     if (numjugadores >= tamreservado) {
+        resize(tamreservado == 0 ? 1 : tamreservado * 2);  // Duplicar tamaño si es necesario
     }
-    numjugadores++;
-    vectorJugadores[numjugadores] = newjug;  // Agrega el nuevo jugador
+
+    // Agregar el nuevo jugador al final del vector
+    vectorJugadores[numjugadores] = newjug;
+    numjugadores++;  // Incrementar el número de jugadores
+
     return *this;
 }
 
 //elimina un jugador del vector de jugadores en funcion del id
 void ConjuntoJugadores::eliminaJugador(int jugid){
-    for(int i=0; i<tamreservado; i++){
+    for(int i=0; i<numjugadores; i++){
         if(vectorJugadores[i].getId() == jugid){
-            for(int j=i; j<tamreservado-1; j++){
+            for(int j=i; j<numjugadores-1; j++){
                 vectorJugadores[j] = vectorJugadores[j+1];
             }
-            tamreservado--;
+            numjugadores--; 
         }
     }
 }
 //buscamos la posicion de un jugador que tiene un determinado id
 int ConjuntoJugadores::buscaJugador(int jugid){
     bool encontrado = false;
-    for(int i=0; i<tamreservado; i++){
+    for(int i=0; i<numjugadores; i++){
         if(vectorJugadores[i].getId() == jugid){
             encontrado = true;
             return i;
