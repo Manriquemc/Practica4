@@ -24,8 +24,13 @@ ConjuntoJugadores::ConjuntoJugadores(int k) {
 
 ConjuntoJugadores & ConjuntoJugadores::operator=(const ConjuntoJugadores & orig){
     if(this != &orig){
+        delete[] vectorJugadores;
         numjugadores = orig.numJugadores();
         tamreservado = orig.tamreservado;
+        vectorJugadores = new Jugador[tamreservado];
+        for(int i=0; i<numjugadores; i++){
+            vectorJugadores[i] = orig.vectorJugadores[i];
+        }
     }
     return *this;
 }
@@ -35,6 +40,7 @@ ConjuntoJugadores & ConjuntoJugadores::operator=(const ConjuntoJugadores & orig)
 ConjuntoJugadores::ConjuntoJugadores(const ConjuntoJugadores& orig) {
    numjugadores = orig.numJugadores();
    tamreservado = orig.tamreservado;
+   vectorJugadores = new Jugador[tamreservado];
    for(int i=0; i<tamreservado; i++){
        vectorJugadores[i] = orig.vectorJugadores[i];
    }
@@ -48,8 +54,7 @@ ConjuntoJugadores::~ConjuntoJugadores() {
 //en este caso reservamos el tamanio justo y necesario para almacenar
 //la información
 ConjuntoJugadores::ConjuntoJugadores(int n, string * vnicks){
-    resize(n);
-    tamreservado = n;
+    vectorJugadores = new Jugador[n];
     numjugadores = n;
     int temp = 1;
     for(int i=0; i<n; i++){
@@ -78,9 +83,10 @@ string ConjuntoJugadores::mostrarRanking(){
             }
         }
     }
-    for(int i=0; i<tamreservado; i++){
-        resultado = to_string(vectorJugadores[i].getId()) + vectorJugadores[i].getNick()
-                  + to_string(vectorJugadores[i].proporcion());
+    for(int i=0; i<numjugadores; i++){
+        resultado = to_string(vectorJugadores[i].getId()) + " " + 
+                vectorJugadores[i].getNick() + " " + 
+                to_string(vectorJugadores[i].proporcion()) + "\n";
     }
     return resultado;
 }
@@ -105,6 +111,7 @@ std::istream & operator>> (std::istream & flujo,  ConjuntoJugadores & m){
         m.vectorJugadores[i].numPartidasPerdidas() = numPartidasJugadas - numPartidasGanadas;
         
     }
+    return flujo;
 }
 
 //para mostrar por pantalla o escribir en fichero los datos del vector de
@@ -119,10 +126,13 @@ std::ostream & operator<< (std::ostream & flujo, const ConjuntoJugadores & conju
 }
 
 //anaide un jugador al final del vector
-ConjuntoJugadores & ConjuntoJugadores::operator+=(const Jugador& newjug){
-    tamreservado++;
-    resize(tamreservado);
-    vectorJugadores[tamreservado] = newjug;
+ConjuntoJugadores & ConjuntoJugadores::operator+=(const Jugador& newjug) {
+    if (numjugadores >= tamreservado) {
+        resize(tamreservado + 1);  // Asegura espacio suficiente
+    }
+    numjugadores++;
+    vectorJugadores[numjugadores] = newjug;  // Agrega el nuevo jugador
+    return *this;
 }
 
 //elimina un jugador del vector de jugadores en funcion del id
@@ -175,6 +185,9 @@ void ConjuntoJugadores::optimizar(){
     vectorJugadores = nuevoVector;
 }
 Jugador & ConjuntoJugadores::operator[](int i) const{
+    if (i < 0 || i >= numjugadores) {
+        throw out_of_range("Índice fuera de rango en ConjuntoJugadores");
+    }
     return vectorJugadores[i];
 }
 void ConjuntoJugadores::ordenaporId(){
@@ -192,7 +205,7 @@ void ConjuntoJugadores::ordenaporId(){
 void ConjuntoJugadores::resize(int newtam){
     if(newtam > tamreservado){
         Jugador *nuevoVector = new Jugador[newtam];
-        for(int i=0; i<tamreservado; i++){
+        for(int i=0; i<numjugadores; i++){
             nuevoVector[i] = vectorJugadores[i];
         }
         delete[] vectorJugadores;
@@ -209,10 +222,10 @@ ConjuntoJugadores operator+( const ConjuntoJugadores & left, const ConjuntoJugad
     int newtam = left.numJugadores()+right.numJugadores();
     ConjuntoJugadores resultado(newtam);
     for(int i=0; i<left.numJugadores(); i++){
-        resultado.vectorJugadores[i] = left.vectorJugadores[i];
+        resultado += left.vectorJugadores[i];
     }
     for(int i=0; i<right.numJugadores(); i++){
-        resultado.vectorJugadores[i+left.numJugadores()] = right.vectorJugadores[i];
+        resultado += right.vectorJugadores[i];
     }
     return resultado;
 }

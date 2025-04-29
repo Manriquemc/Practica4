@@ -39,7 +39,7 @@ public:
      * @brief Devuelve el nick del jugador
      * @return una cadena con el nick del jugador
      */
-    string getNick();
+    string getNick() const;
 
 
     /** @brief Devuelve una referencia a un entero con el número de partidas que ha ganado el jugador.
@@ -95,7 +95,7 @@ public:
      */
     friend std::ostream & operator<< (std::ostream & flujo, const  Jugador & jug);
     
-    int proporcion();
+    int proporcion() const;
 
 private:
     //nick del jugador 

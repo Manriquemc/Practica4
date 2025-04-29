@@ -22,7 +22,7 @@ Jugador::Jugador() {
     numpartidasperdidas = 0;
 }
 
-string Jugador::getNick(){
+string Jugador::getNick() const{
     return nick;
 }
 
@@ -124,6 +124,10 @@ std::ostream & operator << (std::ostream & flujo, const  Jugador & jug){
     return flujo;
 }
 
-int Jugador::proporcion(){
-    return numpartidasganadas/(numpartidasganadas+numpartidasperdidas);
+int Jugador::proporcion() const {
+    int totalPartidas = numpartidasganadas + numpartidasperdidas;
+    if (totalPartidas == 0) {
+        return 0; // Si no hay partidas jugadas, la proporción es 0
+    }
+    return (numpartidasganadas * 100) / totalPartidas; // Retorna la proporción en porcentaje
 }
