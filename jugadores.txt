@@ -1,5 +1,6 @@
 Jugador: Cristina, ID:1, Partidas ganadas:6, Partidas jugadas:7
 Jugador: Lucas, ID:3, Partidas ganadas:4, Partidas jugadas:10
 Jugador: Pablo, ID:4, Partidas ganadas:9, Partidas jugadas:19
-Jugador: Pablo, ID:4, Partidas ganadas:9, Partidas jugadas:19
+Jugador: Pedro, ID:1, Partidas ganadas:3, Partidas jugadas:7
+Jugador: Pedro, ID:1, Partidas ganadas:3, Partidas jugadas:7
 Jugador: Pedro, ID:1, Partidas ganadas:0, Partidas jugadas:0

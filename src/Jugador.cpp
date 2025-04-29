@@ -129,5 +129,5 @@ int Jugador::proporcion() const {
     if (totalPartidas == 0) {
         return 0; // Si no hay partidas jugadas, la proporción es 0
     }
-    return (numpartidasganadas * 100) / totalPartidas; // Retorna la proporción en porcentaje
+    return (static_cast<double>(numpartidasganadas) / totalPartidas) * 100; // Retorna la proporción en porcentaje// Retorna la proporción en porcentaje
 }

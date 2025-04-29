@@ -180,7 +180,8 @@ int ConjuntoJugadores::buscaJugador(string nickbuscado){
 // no reservamos ninguna posición de más
 
 void ConjuntoJugadores::optimizar(){
-    Jugador *nuevoVector = new Jugador[numjugadores];
+    numjugadores = tamreservado;
+    Jugador *nuevoVector = new Jugador[tamreservado];
     for(int i=0; i<numjugadores; i++){
         nuevoVector[i] = vectorJugadores[i];
     }
