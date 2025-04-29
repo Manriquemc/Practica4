@@ -65,6 +65,7 @@ ConjuntoJugadores::ConjuntoJugadores(int n, string * vnicks){
 // y mostramos por pantalla
 string ConjuntoJugadores::mostrarRanking(){
     
+    string resultado;
     ConjuntoJugadores ranking;
     for(int i=0; i<tamreservado; i++){
         ranking.vectorJugadores[i] = vectorJugadores[i];
@@ -77,7 +78,11 @@ string ConjuntoJugadores::mostrarRanking(){
             }
         }
     }
-    return ranking;
+    for(int i=0; i<tamreservado; i++){
+        resultado = to_string(vectorJugadores[i].getId()) + vectorJugadores[i].getNick()
+                  + to_string(vectorJugadores[i].proporcion());
+    }
+    return resultado;
 }
 
 //leemos un conjunto de jugadores de un fichero o flujo
